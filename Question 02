@@ -1,0 +1,112 @@
+#include <iostream>
+#include <vector>
+
+class IntegerSet {
+private:
+    std::vector<bool> a;
+
+public:
+    // Default constructor that initializes an empty set.
+    IntegerSet() : a(101, false) {}
+
+    // Constructor that initializes the set with an array.
+    IntegerSet(int array[], int size) : a(101, false) {
+        for(int i = 0; i < size; ++i) {
+            if(array[i] >= 0 && array[i] <= 100) {
+                a[array[i]] = true;
+            }
+        }
+    }
+
+    // Union of two sets.
+    IntegerSet unionOfSets(const IntegerSet& other) const {
+        IntegerSet unionSet;
+        for (int i = 0; i <= 100; ++i) {
+            unionSet.a[i] = this->a[i] || other.a[i];
+        }
+        return unionSet;
+    }
+
+    // Intersection of two sets.
+    IntegerSet intersectionOfSets(const IntegerSet& other) const {
+        IntegerSet intersectionSet;
+        for (int i = 0; i <= 100; ++i) {
+            intersectionSet.a[i] = this->a[i] && other.a[i];
+        }
+        return intersectionSet;
+    }
+
+    // Insert an element into the set.
+    void insertElement(int k) {
+        if (k >= 0 && k <= 100) {
+            a[k] = true;
+        }
+    }
+
+    // Delete an element from the set.
+    void deleteElement(int m) {
+        if (m >= 0 && m <= 100) {
+            a[m] = false;
+        }
+    }
+
+    // Print the set.
+    void printSet() const {
+        bool isEmpty = true;
+        for (int i = 0; i <= 100; ++i) {
+            if (a[i]) {
+                std::cout << i << " ";
+                isEmpty = false;
+            }
+        }
+        if (isEmpty) {
+            std::cout << "---"; // The set is empty.
+        }
+        std::cout << std::endl;
+    }
+
+    // Determine if two sets are equal.
+    bool isEqualTo(const IntegerSet& other) const {
+        for (int i = 0; i <= 100; ++i) {
+            if (a[i] != other.a[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+int main() {
+    // Test the IntegerSet class.
+    IntegerSet set1;
+    IntegerSet set2;
+    int elements[] = {1, 3, 5, 7, 9};
+    IntegerSet set3(elements, sizeof(elements) / sizeof(int));
+
+    set1.insertElement(1);
+    set1.insertElement(100);
+    set2.insertElement(0);
+    set2.insertElement(50);
+
+    std::cout << "Set 1: ";
+    set1.printSet();
+    std::cout << "Set 2: ";
+    set2.printSet();
+    std::cout << "Set 3: ";
+    set3.printSet();
+
+    // Test union and intersection.
+    IntegerSet unionSet = set1.unionOfSets(set3);
+    IntegerSet intersectionSet = set1.intersectionOfSets(set3);
+
+    std::cout << "Union of Set 1 and Set 3: ";
+    unionSet.printSet();
+    std::cout << "Intersection of Set 1 and Set 3: ";
+    intersectionSet.printSet();
+
+    // Test isEqualTo function.
+    std::cout << "Set 1 is equal to Set 2: " << (set1.isEqualTo(set2) ? "Yes" : "No") << std::endl;
+    std::cout << "Set 1 is equal to itself: " << (set1.isEqualTo(set1) ? "Yes" : "No") << std::endl;
+
+    return 0;
+}
