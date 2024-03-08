@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <random>
+#include <ctime>
+#include <array>
+#include <string>
+
+class Card {
+public:
+    static const std::array<std::string, 13> faces;
+    static const std::array<std::string, 4> suits;
+
+    Card(int face, int suit) : face(face), suit(suit) {}
+
+    std::string toString() const {
+        return faces[face] + " of " + suits[suit];
+    }
+
+private:
+    int face, suit;
+};
+
+const std::array<std::string, 13> Card::faces = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+const std::array<std::string, 4> Card::suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+
+class DeckOfCards {
+public:
+    DeckOfCards() {
+        deck.reserve(52);
+        for (int suit = 0; suit < 4; ++suit) {
+            for (int face = 0; face < 13; ++face) {
+                deck.emplace_back(face, suit);
+            }
+        }
+        currentCard = 0;
+    }
+
+    void shuffle() {
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        for (int i = 0; i < deck.size(); ++i) {
+            int j = std::rand() % deck.size();
+            std::swap(deck[i], deck[j]);
+        }
+    }
+
+    Card dealCard() {
+        return deck[currentCard++];
+    }
+
+    bool moreCards() const {
+        return currentCard < deck.size();
+    }
+
+private:
+    std::vector<Card> deck;
+    int currentCard;
+};
+
+int main() {
+    DeckOfCards deckOfCards;
+    deckOfCards.shuffle();
+
+    while (deckOfCards.moreCards()) {
+        std::cout << deckOfCards.dealCard().toString() << std::endl;
+    }
+
+    return 0;
+}
